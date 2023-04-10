@@ -6,17 +6,19 @@ RUN apt update && apt-get install -y \
     net-tools \
     iputils-ping \
     rsh-server \
+    inetutils-inetd \
     && rm -rf /var/lib/apt/lists/*
 
 
-RUN /etc/init.d/openbsd-inet start
-
-RUN echo '172.28.1.3 fontoura' >> /root/.rhosts
+# creating user fontoura
 RUN useradd -m fontoura
+# setting host inside /etc/hosts
+RUN echo '172.28.1.3 fontoura' >> /home/fontoura/.rhosts
+# setting password for user fontoura
 RUN echo 'fontoura:fontoura' | chpasswd
 
 
 
 #keep container running
 CMD echo '172.28.1.3 trusted' >> /etc/hosts
-ENTRYPOINT tail -f /dev/null
+ENTRYPOINT /etc/init.d/inetutils-inetd start && tail -f /dev/null
