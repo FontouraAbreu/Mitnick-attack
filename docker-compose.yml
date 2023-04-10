@@ -1,47 +1,35 @@
 version: '3.5'
 
 services:
-  # attacker is in a different network
-  attacker:
-    build: .
-    container_name: attacker
-    hostname: attacker
-    networks:
-      - attacker-network
-
-  # x-terminal and trusted-server are in the same network
+  # attacker, x-terminal and trusted-server are in the same network
   xterminal:
     build: ./xterminal
     container_name: x-terminal
     hostname: x-terminal
     networks:
-      xterminal-network:
+      my-network:
         ipv4_address: 172.28.1.2
-      trusted-server-network:
-        ipv4_address: 172.28.2.2
 
   trusted-server:
     build: ./trusted-server
     container_name: trusted-server
     hostname: trusted-server
     networks:
-      xterminal-network:
+      my-network:
         ipv4_address: 172.28.1.3
-      trusted-server-network:
-        ipv4_address: 172.28.2.3
+
+  attacker:
+    build: ./attacker
+    container_name: attacker
+    hostname: attacker
+    networks:
+      my-network:
+        ipv4_address: 172.28.1.4
 
 networks:
-  attacker-network:
-    driver: bridge
-
-  xterminal-network:
+  my-network:
     driver: bridge
     ipam:
+      driver: default
       config:
         - subnet: 172.28.1.0/24
-
-  trusted-server-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.28.2.0/24
