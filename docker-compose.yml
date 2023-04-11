@@ -17,6 +17,8 @@ services:
     networks:
       my-network:
         ipv4_address: 172.28.1.3
+    cap_add:
+      - NET_ADMIN
 
   attacker:
     build: ./attacker

@@ -5,6 +5,7 @@ RUN apt update && apt-get install -y \
     telnet \
     net-tools \
     iputils-ping \
+    hping3 \
     && rm -rf /var/lib/apt/lists/*
 
 #keep container running
