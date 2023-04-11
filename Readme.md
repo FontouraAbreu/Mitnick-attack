@@ -10,3 +10,4 @@ Dadas as dificuldade atual de reproduzir um TCP hijacking como no ataque real, o
 - [ ] colocar as maquinas na mesma rede
 - [ ] Criar um script para fazer o flood de pacotes
 - [ ] fazer um mac spoofing e impersonar o trusted server
+- [ ] fechar o x-terminal para ser acessado apenas pelo trusted server
