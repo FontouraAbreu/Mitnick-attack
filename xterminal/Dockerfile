@@ -12,13 +12,14 @@ RUN apt update && apt-get install -y \
 
 # creating user fontoura
 RUN useradd -m fontoura
-# setting host inside /etc/hosts
-RUN echo '172.28.1.3 fontoura' >> /home/fontoura/.rhosts
 # setting password for user fontoura
 RUN echo 'fontoura:fontoura' | chpasswd
-
+# setting trusted-server IP inside /etc/hosts
+CMD echo '172.28.1.3' >> /etc/hosts
+# enabling only fontoura to login without password as root from trusted-server
+RUN echo '172.28.1.3 fontoura' >> /etc/hosts.equiv
+RUN echo '172.28.1.3 root' >> /home/fontoura/.rhosts
 
 
 #keep container running
-CMD echo '172.28.1.3 trusted' >> /etc/hosts
 ENTRYPOINT /etc/init.d/inetutils-inetd start && tail -f /dev/null
