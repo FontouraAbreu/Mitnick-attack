@@ -27,7 +27,7 @@ services:
     container_name: attacker
     hostname: attacker
     volumes:
-      - ./attacker/scrpts/:/scripts/
+      - ./attacker/scripts/:/scripts/
     networks:
       my-network:
         ipv4_address: 172.28.1.4
