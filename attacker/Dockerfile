@@ -6,6 +6,8 @@ RUN apt update && apt-get install -y \
     net-tools \
     iputils-ping \
     hping3 \
+    dsniff \
+    tcpdump \
     && rm -rf /var/lib/apt/lists/*
 
 #keep container running
