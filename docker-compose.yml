@@ -31,6 +31,8 @@ services:
     networks:
       my-network:
         ipv4_address: 172.28.1.4
+    cap_add:
+      - NET_ADMIN
 
 networks:
   my-network:
