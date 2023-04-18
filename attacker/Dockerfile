@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM python:3.8
 
 RUN apt update && apt-get install -y \
     rsh-client \
@@ -8,7 +8,17 @@ RUN apt update && apt-get install -y \
     hping3 \
     dsniff \
     tcpdump \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
+
+COPY ./scripts/requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
+
+COPY ./scripts /scripts
+RUN chmod +x -R /scripts/
+
+WORKDIR /scripts
 #keep container running
-CMD tail -f /dev/null
+CMD echo '172.28.1.2 x-terminal' >> /etc/hosts && tail -f /dev/null
