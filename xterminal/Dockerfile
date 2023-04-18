@@ -15,10 +15,10 @@ RUN useradd -m fontoura
 # setting password for user fontoura
 RUN echo 'fontoura:fontoura' | chpasswd
 # setting trusted-server IP inside /etc/hosts
-CMD echo '172.28.1.3' >> /etc/hosts
+CMD echo '172.28.1.3 trusted-server' >> /etc/hosts
 # enabling only fontoura to login without password as root from trusted-server
-RUN echo '172.28.1.3 fontoura' >> /etc/hosts.equiv
-RUN echo '172.28.1.3 root' >> /home/fontoura/.rhosts
+RUN echo 'trusted-server fontoura' >> /etc/hosts.equiv
+RUN echo 'trusted-server root' >> /home/fontoura/.rhosts
 
 
 #keep container running
