@@ -19,6 +19,7 @@ CMD echo '172.28.1.3 trusted-server' >> /etc/hosts
 # enabling only fontoura to login without password as root from trusted-server
 RUN echo 'trusted-server fontoura' >> /etc/hosts.equiv
 RUN echo 'trusted-server root' >> /home/fontoura/.rhosts
+RUN chown fontoura:fontoura /home/fontoura/.rhosts
 
 
 #keep container running
