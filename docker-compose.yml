@@ -3,7 +3,9 @@ version: '3.5'
 services:
   # attacker, x-terminal and trusted-server are in the same network
   xterminal:
-    build: ./xterminal
+    build:
+      context: .
+      target: xterminal
     container_name: x-terminal
     hostname: x-terminal
     networks:
@@ -13,7 +15,9 @@ services:
       - NET_ADMIN
 
   trusted-server:
-    build: ./trusted-server
+    build:
+      context: .
+      target: trusted-server
     container_name: trusted-server
     hostname: trusted-server
     networks:
@@ -23,7 +27,9 @@ services:
       - NET_ADMIN
 
   attacker:
-    build: ./attacker
+    build:
+      context: .
+      target: attacker
     container_name: attacker
     hostname: attacker
     networks:
