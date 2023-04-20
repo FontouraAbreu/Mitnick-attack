@@ -181,12 +181,7 @@ Cada etapa será abordada em detalhes a seguir.
 
 ***
 
-## Roadmap
+## Autores
 
-- [X] colocar as maquinas na mesma rede
-- [X] derrubar o trusted server
-- [X] personificar ip e mac do trusted server
-- [X] fazer rlogin no x-terminal através do attacker
-- [ ] conferir se os pacotes estão sendo enviados para o trusted server
-- [ ] fechar o x-terminal para ser acessado apenas pelo trusted server
-- [ ] fazer o backdoor de forma que fique aberto para toda a rede
+- Guiusepe Oneda - GRR20210572
+- Vinícius Fontoura - GRR20206873
