@@ -27,7 +27,123 @@ Nossa topologia consistirá de 3 containers docker:
 2. [trusted_server](./docker-compose.yml#L17)
 3. [x-terminal](./docker-compose.yml#L5)
 
+É possível verificar a topologia no arquivo [docker-compose.yml](./docker-compose.yml).
+
+```yaml
+version: '3.5'
+
+services:
+  # attacker, x-terminal and trusted-server are in the same network
+  xterminal:
+    build:
+      context: .
+      target: xterminal
+    container_name: x-terminal
+    hostname: x-terminal
+    networks:
+      my-network:
+        ipv4_address: 172.28.1.2
+    cap_add:
+      - NET_ADMIN
+
+  trusted-server:
+    build:
+      context: .
+      target: trusted-server
+    container_name: trusted-server
+    hostname: trusted-server
+    networks:
+      my-network:
+        ipv4_address: 172.28.1.3
+    cap_add:
+      - NET_ADMIN
+
+  attacker:
+    build:
+      context: .
+      target: attacker
+    container_name: attacker
+    hostname: attacker
+    networks:
+      my-network:
+        ipv4_address: 172.28.1.4
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  my-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.1.0/24
+```
+
 Os três containers estão na mesma rede e conseguem se enxergar. Entretanto, existe uma relação de confiança entre o trusted_server e o x-terminal. O x-terminal é um terminal que só pode ser acessado, sem a necessidade de senha, a partir do trusted_server.
+
+Para gerar cada uma das máquinas, foi utilizado um Dockerfile com multi-stage build.
+
+```dockerfile
+FROM ubuntu:18.04 as base
+
+RUN apt update && apt-get install -y \
+    rsh-client \
+    rsh-server \
+    net-tools \
+    iputils-ping \
+    tcpdump \
+    && rm -rf /var/lib/apt/lists/*
+
+# Stage 1: Trusted-server
+FROM base as trusted-server
+RUN apt-get update && apt-get install -y \
+    inetutils-inetd \
+    iproute2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Setting host inside /etc/hosts
+CMD echo '172.28.1.2 x-terminal' >> /etc/hosts
+
+# Keep container running
+ENTRYPOINT /etc/init.d/inetutils-inetd start && tc qdisc add dev eth0 root tbf rate 800bit burst 1kbit latency 400ms && tail -f /dev/null
+
+
+# Stage 2: xterminal
+FROM base as xterminal
+
+RUN apt-get update && apt-get install -y \
+    inetutils-inetd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Creating user fontoura
+RUN useradd -m fontoura
+# Setting password for user fontoura
+RUN echo 'fontoura:fontoura' | chpasswd
+# Setting trusted-server IP inside /etc/hosts
+CMD echo '172.28.1.3 trusted-server' >> /etc/hosts
+# Enabling only fontoura to login without password as root from trusted-server
+RUN echo 'trusted-server fontoura' >> /etc/hosts.equiv
+RUN echo 'trusted-server root' >> /home/fontoura/.rhosts
+
+# Keep container running
+ENTRYPOINT /etc/init.d/inetutils-inetd start && tail -f /dev/null
+
+
+# Stage 3: Attacker
+FROM base as attacker
+# Set DEBIAN_FRONTEND to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    hping3 \
+    dsniff \
+    && rm -rf /var/lib/apt/lists/*
+
+# Keep container running
+CMD echo '172.28.1.2 x-terminal' >> /etc/hosts && ifconfig eth0 promisc && tail -f /dev/null
+```
+
+Para facilitar a simulação do ataque, a **interface de rede do trusted-server foi limitada a 800 bits por segundo**. Isso simula uma interface de rede lenta e sucetível a ataques de negação de serviço.
 
 O sistema de acesso remoto será feito usando rlogin.
 
