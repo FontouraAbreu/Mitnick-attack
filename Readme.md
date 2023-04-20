@@ -49,11 +49,11 @@ A largura de banda do trusted_server é limitada, para simular uma interface de 
 
 O ataque será feito em 5 etapas:
 
-1. [Arp Spoofing](./Readme.md#L100)
-2. [Negação de serviço](./Readme.md#realizando-a-negação-de-serviço)
-3. [Personificação](./Readme.md#realizando-a-personificação)
-4. [Invasão](./Readme.md#invadindo)
-5. [Backdoor](./Readme.md#configurando-o-backdoor)
+1. **Arp Spoofing**
+2. **Negação de serviço**
+3. **Personificação**
+4. **Invasão**
+5. **Backdoor**
 
 Cada etapa será abordada em detalhes a seguir.
 
@@ -61,13 +61,13 @@ Cada etapa será abordada em detalhes a seguir.
 
 ## **Como executar**
 
-1. Iniciando as máquinas
+1. **Iniciando as máquinas**
 
     ```bash
     docker-compose up -d
     ```
 
-2. Acessando as máquinas
+2. **Acessando as máquinas**
 
     Para acessar cada uma das máquinas. Em três terminais diferentes, execute os seguintes comandos, um em cada terminal:
 
@@ -97,7 +97,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Para verificar a politica de FORWARD, execute: `sudo iptables -L FORWARD`.
 
-3. Realizando o arp spoofing
+3. **Realizando o arp spoofing**
 
     Para realizar o arp spoofing, execute o seguinte comando no terminal do attacker:
 
@@ -115,7 +115,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Podemos ver que o trusted-server está na tabela arp do x-terminal com o endereço MAC do attacker.
 
-4. Realizando a negação de serviço
+4. **Realizando a negação de serviço**
 
     Para realizar a negação de serviço, execute o seguinte comando no terminal do attacker:
 
@@ -125,7 +125,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     O comando fará um flood de pacotes no trusted_server. O objetivo é saturar a largura de banda do trusted_server, fazendo com que ele não consiga mais responder as requisições do x-terminal ou se comunicar com a rede.
 
-5. Realizando a personificação
+5. **Realizando a personificação**
 
     Para realizar a personificação, iremos mudar o IP do attacker para o IP do trusted_server. Para isso, execute o seguinte comando no terminal do attacker:
 
@@ -135,7 +135,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Agora, o attacker está se passando pelo trusted_server para o x-terminal.
 
-6. Invadindo
+6. **Invadindo**
 
     Para verificar que a personificação foi realizada com sucesso, podemos tentar realizar o login sem senha em x-terminal. A partir do attacker, execute o seguinte comando:
 
@@ -145,7 +145,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     O comando acima tentará realizar o login no x-terminal. Como o attacker está se passando pelo trusted_server, o login será realizado com sucesso e o usuário fontoura será logado no x-terminal sem a necessidade de uma senha.
 
-7. configurando o backdoor
+7. **configurando o backdoor**
 
     Para abrir a conexão através do rlogin ao x-terminal para o attacker, execute o seguinte comando no terminal do x-terminal:
 
@@ -155,7 +155,7 @@ Cada etapa será abordada em detalhes a seguir.
 
     Isso permitirá que o attacker se logue no x-terminal sem a necessidade de uma senha.
 
-8. Conclusão
+8. **Conclusão**
 
     Com o backdoor configurado, podemos retornar o IP do attacker para o seu IP original. Para isso, execute o seguinte comando no terminal do attacker:
 
