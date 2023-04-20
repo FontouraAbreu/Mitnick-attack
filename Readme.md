@@ -10,7 +10,7 @@ Este é o trabalho para a disciplina de Segurança Computacional da Universidade
 
 ## Entendendo nossa versão do ataque
 
-### estrutura geral
+### **estrutura geral**
 
 Nossa topologia consistirá de 3 containers docker:
     1. [attacker](attacker/Dockerfile)
@@ -21,21 +21,21 @@ Os três containers estão na mesma rede e conseguem se enxergar. Entretanto, ex
 
 O sistema de acesso remoto será feito usando rlogin.
 
-### usuários
+### **usuários**
 
 A máquina x-terminal possui um usuário chamado "fontoura" com senha "fontoura".
 
-### attacker
+### **attacker**
 
 A máquina attacker é uma máquina que está tentando acessar o x-terminal. Ela não tem acesso direto ao x-terminal mas tem acesso a rede interna.
 
-### trusted_server
+### **trusted_server**
 
 A máquina trusted_server é uma máquina que tem acesso direto ao x-terminal. Ela é a única máquina que pode acessar o x-terminal.
 
 A largura de banda do trusted_server é limitada, para simular uma interface de rede lenta e sucetível a ataques de negação de serviço.
 
-### Ataque
+### **Ataque**
 
 O ataque será feito em 5 etapas:
 
@@ -47,14 +47,14 @@ O ataque será feito em 5 etapas:
 
 ***
 
-## Requisitos
+## **Requisitos**
 
 - docker
 - docker compose
 
 ***
 
-## Como executar
+## **Como executar**
 
 1. Iniciando as máquinas
 
@@ -87,6 +87,10 @@ O ataque será feito em 5 etapas:
     ```
 
     O comando acima tentará realizar o login no x-terminal. Como o attacker não é o trusted_server, o login necessitará de uma senha.
+
+    **Obs.:** Em alguns cenários o docker manipula o iptables da máquina host. Caso sua politica de FORWARD esteja DROP, execute: `sudo iptables -P FORWARD ACCEPT`.
+
+    Para verificar a politica de FORWARD, execute: `sudo iptables -L FORWARD`.
 
 3. Realizando o arp spoofing
 
@@ -165,8 +169,10 @@ O ataque será feito em 5 etapas:
     Para conferir que os pacotes não estão passando pelo trusted_server, execute o seguinte comando no terminal do attacker:
 
     ```bash
-    tcpdump -i eth0 
+    tcpdump -i eth0 tcp port 513
     ```
+
+    O comando acima irá capturar os pacotes que estão sendo enviados para o x-terminal. Como o attacker está se passando pelo trusted_server, os pacotes não devem passar pelo trusted_server.
 
 ***
 
