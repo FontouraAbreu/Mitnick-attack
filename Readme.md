@@ -1,27 +1,37 @@
 # Mitnick Attack
 
-## Contexto
+## **Requisitos**
+
+- docker
+- docker compose
+
+## **Contexto**
 
 Este é o trabalho para a disciplina de Segurança Computacional da Universidade Federal do Paraná. O objetivo é reproduzir o ataque de Kevin Mitnick e demonstrar que é possível obter acesso a uma rede interna sem a necessidade de um ataque de força bruta.
 
+***
+
 ## [Entendendo o ataque de Mitnick](https://seedsecuritylabs.org/Labs_16.04/PDF/Mitnick_Attack.pdf)
+
+Basta seguir o link acima.
 
 ***
 
-## Entendendo nossa versão do ataque
+## **Entendendo nossa versão do ataque**
 
 ### **estrutura geral**
 
 Nossa topologia consistirá de 3 containers docker:
-    1. [attacker](attacker/Dockerfile)
-    2. [trusted_server](trusted-server/Dockerfile)
-    3. [x-terminal](xterminal/Dockerfile)
+
+1. [attacker](./docker-compose.yml#L29)
+2. [trusted_server](./docker-compose.yml#L17)
+3. [x-terminal](./docker-compose.yml#L5)
 
 Os três containers estão na mesma rede e conseguem se enxergar. Entretanto, existe uma relação de confiança entre o trusted_server e o x-terminal. O x-terminal é um terminal que só pode ser acessado, sem a necessidade de senha, a partir do trusted_server.
 
 O sistema de acesso remoto será feito usando rlogin.
 
-### **usuários**
+### **x-terminal**
 
 A máquina x-terminal possui um usuário chamado "fontoura" com senha "fontoura".
 
@@ -39,18 +49,13 @@ A largura de banda do trusted_server é limitada, para simular uma interface de 
 
 O ataque será feito em 5 etapas:
 
-1. [Arp Spoofing](./Readme.md#realizando-o-arp-spoofing)
+1. [Arp Spoofing](.#L100)
 2. [Negação de serviço](./Readme.md#realizando-a-negação-de-serviço)
 3. [Personificação](./Readme.md#realizando-a-personificação)
 4. [Invasão](./Readme.md#invadindo)
 5. [Backdoor](./Readme.md#configurando-o-backdoor)
 
-***
-
-## **Requisitos**
-
-- docker
-- docker compose
+Cada etapa será abordada em detalhes a seguir.
 
 ***
 
